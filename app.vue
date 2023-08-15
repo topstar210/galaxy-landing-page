@@ -36,12 +36,13 @@ onMounted(() => {
 
   // Galaxy
   const parameters = {};
-  parameters.count = 203000;
-  parameters.size = 0.05;
+  parameters.count = 179700;
+  parameters.size = 0.046;
+  parameters.radius = 2.98;
   parameters.branches = 2;
-  parameters.spin = 2;
-  parameters.randomness = 2;
-  parameters.randomnessPower = 5;
+  parameters.spin = 1.43;
+  parameters.randomness = 0.2;
+  parameters.randomnessPower = 3;
   parameters.insideColor = "#e4dfdd";
   // parameters.outsideColor = "#eb3700"; // first time color is #ac2f95
 
@@ -79,18 +80,17 @@ onMounted(() => {
       //Position
       const radius = Math.random() * parameters.radius;
       const spinAngle = radius * parameters.spin;
-      const branchAngle =
-        ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+      const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
       const randomY =
         Math.pow(Math.random(), parameters.randomnessPower) *
-        (Math.random() < 0.5 ? 1 : -1);
+        (Math.random() < 0.5 ? 0.7 : -0.7);
       const randomZ =
         Math.pow(Math.random(), parameters.randomnessPower) *
-        (Math.random() < 0.5 ? 1 : -1);
+        (Math.random() < 0.5 ? 1.5 : -1.5);
       const randomX =
         Math.pow(Math.random(), parameters.randomnessPower) *
-        (Math.random() < 0.5 ? 1 : -1);
+        (Math.random() < 0.5 ? 0.8 : -0.8);
 
       positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
       positions[i3 + 1] = randomY;
@@ -148,12 +148,13 @@ onMounted(() => {
       size: size * 0.05,
       color: 0xffffff,
       map: texture,
+      transparent: true,
       blending: THREE.AdditiveBlending,
     });
 
     let vertices = [];
     for (let i = 0; i < total; i++) {
-      let radius = THREE.MathUtils.randInt(30, 25);
+      let radius = THREE.MathUtils.randInt(16, 17);
       let particles = randomPointSphere(radius);
       vertices.push(...particles);
     }
@@ -164,7 +165,7 @@ onMounted(() => {
     return new THREE.Points(pointGeometry, pointMaterial);
   };
 
-  scene.add(createStars(texture, 15, 1000));
+  scene.add(createStars(texture, 8, 1300));
 
   /**
    * Sizes
@@ -189,15 +190,9 @@ onMounted(() => {
   });
 
   // Camera
-  const camera = new THREE.PerspectiveCamera(
-    55,
-    sizes.width / sizes.height,
-    0.01,
-    1000
-  );
+  const camera = new THREE.PerspectiveCamera(55, sizes.width / sizes.height, 0.01, 1000);
 
-  camera.position.set(-30, 30, 20);
-  camera.lookAt(0, 0, 0);
+  camera.position.set(10, 25, 10);
   scene.add(camera);
 
   // Renderer
@@ -207,19 +202,21 @@ onMounted(() => {
 
   galaxy.value.appendChild(renderer.domElement);
 
-  // Animate
-  const clock = new THREE.Clock();
-
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.enableZoom = true;
   controls.revert = true;
+
   controls.addEventListener("change", (e) => {
     const distance = controls.target.distanceTo(controls.object.position);
-    const radio = 5 / 130;
-    //     const outsideColor = ref("rgb(172, 47, 149)");
-    // 235,55,0
+    if(distance < 9.5 || distance > 30) {
+      return true;
+    } 
+
+    const DiStep = 30 - distance;
+    const RaStep = DiStep / 9;
+    radius.value = RaStep + 3;
 
     let red, green, blue;
     if (distance > 20) {
@@ -228,9 +225,11 @@ onMounted(() => {
       blue = Math.floor(((distance - 130) * 149) / 110 + 149);
       outsideColor.value = `rgb(${red},${green},${blue})`;
     }
-    radius.value = (130 - distance) * radio + 2;
     generateGalaxy();
   });
+
+  // Animate
+  const clock = new THREE.Clock();
 
   const tick = () => {
     const elapsedTime = clock.getElapsedTime();
