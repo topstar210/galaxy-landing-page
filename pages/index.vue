@@ -1,4 +1,5 @@
 <template>
+  <SEGalaxy />
   <SEStartVideo />
   <SEWhatWeDo />
   <SETheMission />
