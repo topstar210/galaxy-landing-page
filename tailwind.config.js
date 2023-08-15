@@ -9,7 +9,17 @@ module.exports = {
     "./app.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        move: "move 1.5s linear infinite",
+      },
+      keyframes: {
+        move: {
+          "0%, 100%": { transform: "translate(-50%, 0)" },
+          "50%": { transform: "translate(-50%, -8px)" },
+        },
+      },
+    },
   },
   plugins: [],
 };

@@ -1,6 +1,24 @@
 <template>
   <div class="bg-black">
-    <div ref="galaxy"></div>
+    <img
+      src="~/assets/imgs/logo-cube.svg"
+      class="fixed bottom-10 left-1/2 -translate-x-1/2"
+    />
+    <h2 class="font-black text-3xl text-white uppercase fixed top-8 left-8">
+      format54
+    </h2>
+    <img src="~/assets/imgs/menu.svg" class="fixed top-5 right-8 invert w-10 cursor-pointer" />
+    <div class="flex items-center justify-center h-screen relative">
+      <img src="~/assets/imgs/logo.svg" />
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <div class="w-8 h-14 border-2 border-white rounded-full">
+          <span
+            class="block w-1 h-4 bg-white rounded-full absolute left-1/2 -translate-x-1/2 bottom-2 animate-move"
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div ref="galaxy" class="w-full overflow-hidden" />
   </div>
 </template>
 
@@ -127,7 +145,7 @@ onMounted(() => {
   const createStars = (texture, size, total) => {
     let pointGeometry = new THREE.BufferGeometry();
     let pointMaterial = new THREE.PointsMaterial({
-      size: size * 0.15,
+      size: size * 0.05,
       color: 0xffffff,
       map: texture,
       blending: THREE.AdditiveBlending,
@@ -135,7 +153,7 @@ onMounted(() => {
 
     let vertices = [];
     for (let i = 0; i < total; i++) {
-      let radius = THREE.MathUtils.randInt(50, 45);
+      let radius = THREE.MathUtils.randInt(30, 25);
       let particles = randomPointSphere(radius);
       vertices.push(...particles);
     }
@@ -146,7 +164,7 @@ onMounted(() => {
     return new THREE.Points(pointGeometry, pointMaterial);
   };
 
-  scene.add(createStars(texture, 15, 2000));
+  scene.add(createStars(texture, 15, 1000));
 
   /**
    * Sizes
@@ -178,7 +196,7 @@ onMounted(() => {
     1000
   );
 
-  camera.position.set(-60, 60, 20);
+  camera.position.set(-30, 30, 20);
   camera.lookAt(0, 0, 0);
   scene.add(camera);
 
@@ -196,6 +214,7 @@ onMounted(() => {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.enableZoom = true;
+  controls.revert = true;
   controls.addEventListener("change", (e) => {
     const distance = controls.target.distanceTo(controls.object.position);
     const radio = 5 / 130;
