@@ -206,7 +206,6 @@ onMounted(() => {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.enableZoom = true;
-  controls.revert = true;
 
   controls.addEventListener("change", (e) => {
     const distance = controls.target.distanceTo(controls.object.position);
