@@ -1,0 +1,28 @@
+
+// include: <link rel="stylesheet" href="https://use.typekit.net/wdv6hwc.css"> or use this:
+@import url("https://use.typekit.net/wdv6hwc.css");
+
+@font-face {
+    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Staff';
+    font-style: normal;
+    font-weight: 400;
+    src:    url('@/assets/fonts/Staff-Light.woff2') format('woff2'),
+            url('@/assets/fonts/Staff-Light.woff') format('woff'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+@font-face {
+    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Staff-X-Wide';
+    font-style: normal;
+    font-weight: 700;
+    src:    url('@/assets/fonts/StaffXWide-Bold.woff2') format('woff2'),
+            url('@/assets/fonts/StaffXWide-Bold.woff') format('woff'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+@font-face {
+    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Staff-X-Wide';
+    font-style: normal;
+    font-weight: 400;
+    src:    url('@/assets/fonts/StaffXWide-Regular.woff2') format('woff2'),
+            url('@/assets/fonts/StaffXWide-Regular.woff') format('woff'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}

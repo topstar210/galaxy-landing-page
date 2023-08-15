@@ -1,25 +1,29 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [
-    "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
-    "./plugins/**/*.{js,ts}",
-    "./nuxt.config.{js,ts}",
-    "./app.vue",
-  ],
+export default {
   theme: {
     extend: {
-      animation: {
-        move: "move 1.5s linear infinite",
+      colors: {
+        background: "#000000",
+        text: "#FFFFFF",
+        primary: "#00DB95",
+        secondary: "#007650",
       },
-      keyframes: {
-        move: {
-          "0%, 100%": { transform: "translate(-50%, 0)" },
-          "50%": { transform: "translate(-50%, -8px)" },
-        },
+      fontFamily: {
+        sans: ["Staff", "sans-serif"],
+        mono: ["t26-carbon", "monospace"],
+        headline: ["Staff-X-Wide", "sans-serif"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
+  content: [
+    `./components/**/*.{vue,js,ts}`,
+    `./layouts/**/*.vue`,
+    `./pages/**/*.vue`,
+    `./composables/**/*.{js,ts}`,
+    `./plugins/**/*.{js,ts}`,
+    `./App.{js,ts,vue}`,
+    `./app.{js,ts,vue}`,
+    `./Error.{js,ts,vue}`,
+    `./error.{js,ts,vue}`,
+  ],
 };
