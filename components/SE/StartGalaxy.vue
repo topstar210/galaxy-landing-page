@@ -1,8 +1,19 @@
 <template>
-  <section class="galaxy-section">
-    <!-- <div class="mobile" style="width: 200px; height: 200px; background: red">Mobile</div> -->
-    <div ref="galaxy" class="w-full overflow-hidden" />
-  </section>
+  <div class="section-container relative h-[200vh]">
+    <section class="logo-section flex items-center justify-center h-screen">
+      <img src="~/assets/images/logo.landing.svg" />
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <div class="w-8 h-14 border-2 border-white rounded-full">
+          <span
+            class="block w-1 h-4 bg-white rounded-full absolute left-1/2 -translate-x-1/2 bottom-2 animate-move"
+          ></span>
+        </div>
+      </div>
+    </section>
+    <section class="galaxy-section flex items-center justify-center h-screen opacity-0 absolute top-0">
+      <div ref="galaxy" class="w-full overflow-hidden" />
+    </section>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -220,7 +231,19 @@ const galaxyAnimation = () => {
     },
     (context: any) => {
       // let { isDesktop, isMobile } = context.conditions;
-      let tl = gsap.timeline({
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: ".section-container",
+          scrub: true,
+          pin: true,
+          pinSpacing: false
+        },
+      })
+      .to('.logo-section', { opacity: 0, duration: 1 })
+      .to('.galaxy-section', { opacity: 1, duration: 10 });
+
+      let gtl = gsap.timeline({
         scrollTrigger: {
           trigger: ".galaxy-section",
           scrub: 1,
@@ -228,10 +251,10 @@ const galaxyAnimation = () => {
           pin: true,
           onUpdate: (self: any) => {
             let pg = self.progress;
-            if(pg > 0 && pg < 0.5){
-                let XZ = 20 * (1 - pg);
-                let Y = 50 * (1 - pg);
-                camera.position.set(XZ, Y, XZ);
+            if (pg > 0 && pg < 0.5) {
+              let XZ = 20 * (1 - pg);
+              let Y = 50 * (1 - pg);
+              camera.position.set(XZ, Y, XZ);
             }
 
             // fomula: firstVal + (lastVal - firstVal) * pg
@@ -258,11 +281,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .galaxy-section {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   width: 100%;
 }
 </style>

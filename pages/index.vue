@@ -9,7 +9,6 @@
   <SEShowreel />
   <!-- <SECustomers /> -->
   <SETheVision />
-
 </template>
 
 <script setup lang="ts"></script>
@@ -30,12 +29,11 @@ div {
 }
 
 body {
-  overflow-x: hidden; 
+  overflow-x: hidden;
   text-rendering: geometricPrecision;
-
 }
 body.overflow-hidden {
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .inner-max-width {
