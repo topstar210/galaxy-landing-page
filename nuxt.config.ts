@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     "~/assets/css/main.scss", // you should add main.scss somewhere in your app
   ],
   nitro: {
-    preset: "netlify",
+    // preset: "netlify",
   },
   runtimeConfig: {
     private: {
