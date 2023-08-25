@@ -6,11 +6,13 @@
         <div class="w-8 h-14 border-2 border-white rounded-full">
           <span
             class="block w-1 h-4 bg-white rounded-full absolute left-1/2 -translate-x-1/2 bottom-2 animate-move"
-          ></span>
+          />
         </div>
       </div>
     </section>
-    <section class="galaxy-section flex items-center justify-center h-screen opacity-0 absolute top-0">
+    <section
+      class="galaxy-section flex items-center justify-center h-screen opacity-0 absolute top-0"
+    >
       <div ref="galaxy" class="w-full overflow-hidden" />
     </section>
   </div>
@@ -79,7 +81,8 @@ const generateGalaxy = () => {
     //Position
     const radius = Math.random() * parameters.radius;
     const spinAngle = radius * parameters.spin;
-    const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+    const branchAngle =
+      ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
     const randomY =
       Math.pow(Math.random(), parameters.randomnessPower) *
@@ -103,7 +106,6 @@ const generateGalaxy = () => {
     colors[i3 + 1] = mixedColor.g;
     colors[i3 + 2] = mixedColor.b;
   }
-
   geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
   geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
@@ -170,8 +172,13 @@ const threeJSinitialFunc = () => {
     height: window.innerHeight,
   };
   // Camera
-  camera = new THREE.PerspectiveCamera(55, sizes.width / sizes.height, 0.01, 1000);
-  camera.position.set(10, 25, 10);
+  camera = new THREE.PerspectiveCamera(
+    55,
+    sizes.width / sizes.height,
+    0.01,
+    1000
+  );
+  camera.position.set(10, 25, 25);
 
   generateGalaxy();
   generateGlobalStar();
@@ -232,23 +239,21 @@ const galaxyAnimation = () => {
     (context: any) => {
       // let { isDesktop, isMobile } = context.conditions;
 
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: ".section-container",
+            scrub: 1,
+            pin: true,
+            pinSpacing: false,
+          },
+        })
+        .to(".logo-section", { opacity: 0, duration: 1 })
+        .to(".galaxy-section", { opacity: 1, duration: 10 });
+
       gsap.timeline({
         scrollTrigger: {
-          trigger: ".section-container",
-          scrub: true,
-          pin: true,
-          pinSpacing: false
-        },
-      })
-      .to('.logo-section', { opacity: 0, duration: 1 })
-      .to('.galaxy-section', { opacity: 1, duration: 10 });
-
-      let gtl = gsap.timeline({
-        scrollTrigger: {
           trigger: ".galaxy-section",
-          scrub: 1,
-          end: "200%",
-          pin: true,
           onUpdate: (self: any) => {
             let pg = self.progress;
             if (pg > 0 && pg < 0.5) {
@@ -256,7 +261,6 @@ const galaxyAnimation = () => {
               let Y = 50 * (1 - pg);
               camera.position.set(XZ, Y, XZ);
             }
-
             // fomula: firstVal + (lastVal - firstVal) * pg
             parameters.count = 34100 + (262900 - 34100) * pg;
             parameters.size = 0.011 + (0.1 - 0.011) * pg;
