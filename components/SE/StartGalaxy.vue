@@ -1,6 +1,8 @@
 <template>
   <div class="section-container relative flex items-center justify-center">
-    <section class="logo-section flex items-center justify-center h-screen relative">
+    <section
+      class="logo-section flex items-center justify-center h-screen relative"
+    >
       <img src="~/assets/images/logo.landing.svg" />
       <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
         <div class="w-8 h-14 border-2 border-white rounded-full">
@@ -22,49 +24,50 @@
       HERE TO TELL STORIES
     </p>
     <p
-      class="absolute translate-y-[100px] help-text-2 text-6xl text-white font-bold mt-8 z-10 opacity-0"
+      class="absolute translate-y-[100px] help-text-2 text-5xl text-white font-bold mt-8 z-10 opacity-0"
     >
       LIKE NO ONE ELSE
     </p>
     <p
-      class="absolute help-text-3 max-w-3xl text-8xl text-white font-bold opacity-0 -translate-x-[1920px] -translate-y-1/4 z-10"
+      class="absolute help-text-3 max-w-3xl text-6xl leading-tight text-white font-bold opacity-0 -translate-x-[1920px] -translate-y-10 z-10"
     >
       NO BULLSHIT. JUST GOOD PEOPLE MAKING DAMN GOOD FILMS.
     </p>
     <p
-      class="absolute help-text-4 max-w-3xl text-2xl text-white mt-8 -translate-x-[1920px] translate-y-48 z-10"
+      class="absolute help-text-4 max-w-3xl text-xl text-white mt-8 -translate-x-[1920px] translate-y-48 z-10"
     >
-      Kein Bock auf langweilige Werbefilme? Wir auch nicht. Hi, wir sind FORMAT 54.
+      Kein Bock auf langweilige Werbefilme? Wir auch nicht.<br />
+      Hi, wir sind FORMAT 54.
     </p>
     <div
-      class="absolute cube cube1 pointer-events-none bg-[#5C5C5C] w-64 h-64 opacity-0 rotate-[30deg]"
+      class="absolute cube cube1 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube2 pointer-events-none bg-[#5C5C5C] w-64 h-64 opacity-0 rotate-[30deg]"
+      class="absolute cube cube2 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube3 pointer-events-none bg-[#5C5C5C] w-64 h-64 opacity-0 rotate-[30deg]"
+      class="absolute cube cube3 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube4 pointer-events-none bg-[#5C5C5C] w-64 h-64 opacity-0 rotate-[30deg]"
+      class="absolute cube cube4 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube5 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube5 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube6 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube6 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube7 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube7 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube8 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube8 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube9 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube9 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
     <div
-      class="absolute cube cube10 pointer-events-none bg-[#5C5C5C] w-40 h-40 opacity-0 rotate-[30deg]"
+      class="absolute cube cube10 pointer-events-none bg-[#5C5C5C] w-80 h-80 opacity-0 rotate-[30deg]"
     ></div>
   </div>
   <div class="h-[800vh]"></div>
@@ -136,7 +139,8 @@ const generateGalaxy = (parameters) => {
     //Position
     const radius = Math.random() * parameters.radius;
     const spinAngle = radius * parameters.spin;
-    const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+    const branchAngle =
+      ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
 
     const randomY =
       Math.pow(Math.random(), parameters.randomnessPower) *
@@ -226,7 +230,12 @@ const threeJSinitialFunc = () => {
     height: window.innerHeight,
   };
   // Camera
-  camera = new THREE.PerspectiveCamera(55, sizes.width / sizes.height, 0.01, 1000);
+  camera = new THREE.PerspectiveCamera(
+    55,
+    sizes.width / sizes.height,
+    0.01,
+    1000
+  );
   camera.position.set(30, 75, 30);
 
   generateGalaxy(parameters);
@@ -315,6 +324,12 @@ const galaxyAnimation = () => {
             trigger: ".galaxy-section",
             onUpdate: (self: any) => {
               let pg = self.progress;
+              if (pg > 0.4) {
+                outsideColor.value = "#eb3700";
+              } else {
+                outsideColor.value = "rgb(172, 47, 149)";
+              }
+
               /**
                *  30 75 30, pg === 0
                * *3x
@@ -325,7 +340,7 @@ const galaxyAnimation = () => {
               if (pg > 0 && pg <= 0.5) {
                 XZ = -40 * pg + 35;
                 Y = -100 * pg + 70;
-              } else if(pg > 0.5) {
+              } else if (pg > 0.5) {
                 XZ = -4 * pg + 17;
                 Y = -10 * pg + 25;
               }
@@ -343,27 +358,35 @@ const galaxyAnimation = () => {
             },
           },
         })
-
         .to(".cube", { opacity: 1, duration: 0.5, delay: 5 })
+        .to(".galaxy-section", { opacity: 0, duration: 0.1 })
         .to(".help-text-1", { y: 0, opacity: 1, duration: 0.5 })
         .to(".help-text-2", { y: 50, opacity: 1, duration: 1 })
         .to(".help-text-2", { y: 100, opacity: 0, duration: 1, delay: 1.5 })
         .to(".help-text-1", { y: 50, opacity: 0, duration: 0.5 })
-        .to(".help-text-3", { x: -400, opacity: 1, duration: 1 })
+        .to(".help-text-3", { x: -250, opacity: 1, duration: 1 })
         .to(".help-text-4", { x: -400, opacity: 1, duration: 1 })
         .to(".help-text-3", { x: 1920, opacity: 0, duration: 2 })
         .to(".help-text-4", { x: -1920, opacity: 0, duration: 2 })
-        .to(".cube1", { width: 80, height: 80, duration: 0.1, delay: 2 }, "-=10")
-        .to(".cube2", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube3", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube4", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube5", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube6", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube7", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube8", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube9", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube10", { width: 80, height: 80, duration: 0.1 }, "-=10")
-        .to(".cube1", { x: "-70vw", y: "-55vh", duration: 10, delay: 2 }, "-=10")
+        .to(
+          ".cube1",
+          { width: 100, height: 100, duration: 0.1, delay: 2 },
+          "-=10"
+        )
+        .to(".cube2", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube3", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube4", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube5", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube6", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube7", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube8", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube9", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(".cube10", { width: 100, height: 100, duration: 0.1 }, "-=10")
+        .to(
+          ".cube1",
+          { x: "-70vw", y: "-55vh", duration: 10, delay: 2 },
+          "-=10"
+        )
         .to(".cube2", { x: "-35vw", y: "-70vh", duration: 10 }, "-=10")
         .to(".cube3", { x: "-5vw", y: "-80vh", duration: 10 }, "-=10")
         .to(".cube4", { x: "35vw", y: "-58vh", duration: 10 }, "-=10")
@@ -392,5 +415,10 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+
+.help-text-2,
+.help-text-3 {
+  font-family: "Staff-X-Wide", sans-serif;
 }
 </style>
