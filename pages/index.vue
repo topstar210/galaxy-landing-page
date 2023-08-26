@@ -1,14 +1,14 @@
 <template>
-  <!-- <SEStartGalaxy /> -->
-  <SEStartCube />
-  <!-- <SEStartVideo />
+  <SEStartGalaxy />
+  <!-- <SEStartCube /> -->
+  <SEStartVideo />
   <SEWhatWeDo />
   <SETheMission />
-  <SEShowcase /> 
+  <!-- <SEShowcase />  -->
   <SEBuzzWords />
   <SEShowreel />
-  <SECustomers />
-  <SETheVision /> -->
+  <!-- <SECustomers /> -->
+  <SETheVision />
 </template>
 
 <script setup lang="ts"></script>
