@@ -169,7 +169,7 @@ const threeJSinitialFunc = () => {
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
-  // controls.enableRotate = false;
+  controls.enableRotate = false;
   controls.enableZoom = false;
   controls.enableDamping = true;
 
