@@ -1,8 +1,6 @@
 <template>
   <div class="section-container relative flex items-center justify-center">
-    <section
-      class="logo-section flex items-center justify-center h-screen relative"
-    >
+    <section class="logo-section flex items-center justify-center h-screen relative">
       <img src="~/assets/images/logo.landing.svg" />
       <div class="absolute bottom-10 left-1/2 -translate-x-1/2">
         <div class="w-8 h-14 border-2 border-white rounded-full">
@@ -18,9 +16,7 @@
       <div ref="galaxy" class="w-full overflow-hidden" />
     </section>
 
-    <p
-      class="absolute help-text-1 text-3xl text-white font-medium z-10 opacity-0"
-    >
+    <p class="absolute help-text-1 text-3xl text-white font-medium z-10 opacity-0">
       HERE TO TELL STORIES
     </p>
     <p
@@ -83,205 +79,85 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 gsap.registerPlugin(ScrollTrigger);
 let breakPoint = 800;
 let mm = gsap.matchMedia();
-
-let XZ = 30;
-let Y = 75;
 let galaxy = ref(null);
-let outsideColor = ref("rgb(172, 47, 149)");
 
-// Scene
+// Create a new Three.js scene and camera
 const scene = new THREE.Scene();
 
-// Galaxy
-const parameters: any = {};
-parameters.count = 132200; // last val: 262900
-parameters.size = 0.085; // last val: 0.1
-parameters.radius = 6.93; // last val: 20
-parameters.branches = 2;
-parameters.spin = 0.36; // last val: 0.36
-parameters.randomness = 0.69; // last val: 2.08
-parameters.randomnessPower = 2.08; // last val: 2.08
-parameters.insideColor = "#e4dfdd";
-// parameters.outsideColor = "#eb3700"; // first time color is #ac2f95
-
-let sizes: any,
-  camera: any = null;
-let geometry: any = null;
-let material: any = null;
-let points: any = null;
-//  galaxy
-const generateGalaxy = (parameters) => {
-  parameters.outsideColor = outsideColor.value;
-
-  /**
-   * Destroy Old Galaxy
-   */
-  if (points !== null) {
-    geometry.dispose();
-    material.dispose();
-    scene.remove(points);
-  }
-
-  /**
-   * Geometry
-   */
-  geometry = new THREE.BufferGeometry();
-
-  const positions = new Float32Array(parameters.count * 3);
-  const colors = new Float32Array(parameters.count * 3);
-
-  const colorInside = new THREE.Color(parameters.insideColor);
-  const colorOutside = new THREE.Color(parameters.outsideColor);
-
-  for (let i = 0; i < parameters.count; i++) {
-    const i3 = i * 3;
-
-    //Position
-    const radius = Math.random() * parameters.radius;
-    const spinAngle = radius * parameters.spin;
-    const branchAngle =
-      ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
-
-    const randomY =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 3 : -3);
-    const randomZ =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 3 : -3);
-    const randomX =
-      Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 3 : -3);
-
-    positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-    positions[i3 + 1] = randomY;
-    positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
-
-    //Color
-    const mixedColor = colorInside.clone();
-    mixedColor.lerp(colorOutside, radius / parameters.radius);
-
-    colors[i3] = mixedColor.r;
-    colors[i3 + 1] = mixedColor.g;
-    colors[i3 + 2] = mixedColor.b;
-  }
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-
-  /**
-   * Material
-   */
-  material = new THREE.PointsMaterial({
-    size: parameters.size,
-    sizeAttenuation: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    vertexColors: true,
-  });
-
-  /**
-   * Points
-   */
-  points = new THREE.Points(geometry, material);
-  scene.add(points);
-};
-
-// Globe Stars
-const generateGlobalStar = () => {
-  const loader = new THREE.TextureLoader();
-  const texture = loader.load("./images/star.png");
-  const randomPointSphere = (radius: any) => {
-    let theta = 2 * Math.PI * Math.random();
-    let phi = Math.acos(2 * Math.random() - 1);
-    let dx = 0 + radius * Math.sin(phi) * Math.cos(theta);
-    let dy = 0 + radius * Math.sin(phi) * Math.sin(theta);
-    let dz = 0 + radius * Math.cos(phi);
-    return [dx, dy, dz];
-  };
-
-  const createStars = (texture: any, size: any, total: any) => {
-    let pointGeometry = new THREE.BufferGeometry();
-    let pointMaterial = new THREE.PointsMaterial({
-      size: size * 0.05,
-      color: 0xffffff,
-      map: texture,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-    });
-
-    let vertices = [];
-    for (let i = 0; i < total; i++) {
-      let radius = THREE.MathUtils.randInt(15, 18);
-      let particles = randomPointSphere(radius);
-      vertices.push(...particles);
-    }
-    pointGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(vertices), 3)
-    );
-    return new THREE.Points(pointGeometry, pointMaterial);
-  };
-
-  scene.add(createStars(texture, 20, 2000));
-};
+let camera;
+let posy = 0,
+  posz = 300;
 
 const threeJSinitialFunc = () => {
-  sizes = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-  // Camera
+  function generateStarPositions(numStars, xRange, yRange, zRange) {
+    const starPositions = [];
+    for (let i = 0; i < numStars; i++) {
+      const x = Math.random() * (xRange.max - xRange.min) + xRange.min;
+      const y = Math.random() * (yRange.max - yRange.min) + yRange.min;
+      const z = Math.random() * (zRange.max - zRange.min) + zRange.min;
+      starPositions.push({ x, y, z });
+    }
+    return starPositions;
+  }
+
   camera = new THREE.PerspectiveCamera(
-    55,
-    sizes.width / sizes.height,
-    0.01,
+    75,
+    window.innerWidth / window.innerHeight,
+    1,
     1000
   );
-  camera.position.set(30, 75, 30);
+  // Define the shape of the mountain
+  const mountainShape = new THREE.Shape();
+  // ... define the points of the shape here ...
 
-  generateGalaxy(parameters);
-  generateGlobalStar();
+  // Extrude the shape to give it depth
+  const mountainGeometry = new THREE.ExtrudeGeometry(mountainShape, { depth: 50 });
 
-  window.addEventListener("resize", () => {
-    // Update sizes
-    sizes.width = window.innerWidth;
-    sizes.height = window.innerHeight;
+  // Create a material for the mountain
+  const mountainMaterial = new THREE.MeshBasicMaterial({ color: 0x996633 });
 
-    // Update camera
-    camera.aspect = sizes.width / sizes.height;
-    camera.updateProjectionMatrix();
+  // Create a mesh object for the mountain
+  const mountainMesh = new THREE.Mesh(mountainGeometry, mountainMaterial);
+  scene.add(mountainMesh);
 
-    // Update renderer
-    renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Define the positions and properties of the stars in the cluster
+  const starPositions = generateStarPositions(
+    3000,
+    { min: -200, max: 200 },
+    { min: -20, max: 20 },
+    { min: -8800, max: 300 }
+  );
+
+  const starSize = 2;
+  const starColor = 0xffffff;
+
+  // Create a mesh object for each star
+  starPositions.forEach((position) => {
+    const starGeometry = new THREE.SphereGeometry(starSize);
+    const starMaterial = new THREE.MeshBasicMaterial({ color: starColor });
+    const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+    starMesh.position.set(position.x, position.y, position.z);
+    scene.add(starMesh);
   });
 
-  // Renderer
-  const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setSize(sizes.width, sizes.height);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Set the camera position and render the scene
+  camera.position.set(0, posy, posz);
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
   galaxy?.value?.appendChild(renderer.domElement);
-
-  scene.add(camera);
 
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
-  controls.enableRotate = false;
+  controls.enableRotate = true;
   controls.enableZoom = false;
   controls.enableDamping = true;
 
-  // Animate
-  const clock = new THREE.Clock();
-
-  const tick = () => {
-    // const elapsedTime = clock.getElapsedTime();
-    // points.rotation.y = elapsedTime * 0.05;
-    controls.update();
+  function animate() {
+    requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    window.requestAnimationFrame(tick);
-  };
-
-  tick();
+  }
+  animate();
 };
 
 // init gsap
@@ -320,41 +196,22 @@ const galaxyAnimation = () => {
           scrollTrigger: {
             scrub: true,
             start: "top top",
-            end: "200%",
+            end: "300%",
             trigger: ".galaxy-section",
             onUpdate: (self: any) => {
               let pg = self.progress;
-              if (pg > 0.4) {
-                outsideColor.value = "#eb3700";
-              } else {
-                outsideColor.value = "rgb(172, 47, 149)";
+              // console.log('pg', pg);
+              if (pg < 0.3) {
+                posy = (pg / 0.3) * 60;
+              } else if (pg > 0.3 && pg < 0.5) {
+                posy = 60 - ((pg-0.3) / 0.2) * 60
+              } else if(pg > 0.5 && pg < 0.75) {
+                posy = ((pg-0.5) / 0.25) * 60;
+              } else if (pg > 0.75 && pg < 1) {
+                posy = 60 - ((pg-0.75) / 0.25) * 60
               }
-
-              /**
-               *  30 75 30, pg === 0
-               * *3x
-               *  10 25 10, pg === 0.5
-               * *0.8x
-               *  8 20 8, pg === 1
-               */
-              if (pg > 0 && pg <= 0.5) {
-                XZ = -40 * pg + 35;
-                Y = -100 * pg + 70;
-              } else if (pg > 0.5) {
-                XZ = -4 * pg + 17;
-                Y = -10 * pg + 25;
-              }
-              camera.position.set(XZ, Y, XZ);
-
-              // fomula: firstVal + (lastVal - firstVal) * pg
-              parameters.count = 112200 + (11040 - 112200) * pg;
-              parameters.size = 0.085 + (0.12 - 0.085) * pg;
-              parameters.radius = 6.93 + (21 - 6.93) * pg;
-              parameters.spin = 0.36 + (0.35 - 0.36) * pg;
-              parameters.randomness = 0.69 + (1 - 0.69) * pg;
-              parameters.randomnessPower = 2.08 + (5.1 - 2.08) * pg;
-
-              generateGalaxy(parameters);
+              posz = 300 - 1200 * (pg / 0.3);
+              camera.position.set(0, posy, posz);
             },
           },
         })
@@ -368,11 +225,7 @@ const galaxyAnimation = () => {
         .to(".help-text-4", { x: -400, opacity: 1, duration: 1 })
         .to(".help-text-3", { x: 1920, opacity: 0, duration: 2 })
         .to(".help-text-4", { x: -1920, opacity: 0, duration: 2 })
-        .to(
-          ".cube1",
-          { width: 100, height: 100, duration: 0.1, delay: 2 },
-          "-=10"
-        )
+        .to(".cube1", { width: 100, height: 100, duration: 0.1, delay: 2 }, "-=10")
         .to(".cube2", { width: 100, height: 100, duration: 0.1 }, "-=10")
         .to(".cube3", { width: 100, height: 100, duration: 0.1 }, "-=10")
         .to(".cube4", { width: 100, height: 100, duration: 0.1 }, "-=10")
@@ -382,11 +235,7 @@ const galaxyAnimation = () => {
         .to(".cube8", { width: 100, height: 100, duration: 0.1 }, "-=10")
         .to(".cube9", { width: 100, height: 100, duration: 0.1 }, "-=10")
         .to(".cube10", { width: 100, height: 100, duration: 0.1 }, "-=10")
-        .to(
-          ".cube1",
-          { x: "-70vw", y: "-55vh", duration: 10, delay: 2 },
-          "-=10"
-        )
+        .to(".cube1", { x: "-70vw", y: "-55vh", duration: 10, delay: 2 }, "-=10")
         .to(".cube2", { x: "-35vw", y: "-70vh", duration: 10 }, "-=10")
         .to(".cube3", { x: "-5vw", y: "-80vh", duration: 10 }, "-=10")
         .to(".cube4", { x: "35vw", y: "-58vh", duration: 10 }, "-=10")
