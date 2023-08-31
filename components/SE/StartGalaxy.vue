@@ -84,21 +84,15 @@ let galaxy = ref(null);
 // Create a new Three.js scene and camera
 const scene = new THREE.Scene();
 
-let camera;
+let camera, sizes;
 let posy = 0,
   posz = 300;
 
 const threeJSinitialFunc = () => {
-  function generateStarPositions(numStars, xRange, yRange, zRange) {
-    const starPositions = [];
-    for (let i = 0; i < numStars; i++) {
-      const x = Math.random() * (xRange.max - xRange.min) + xRange.min;
-      const y = Math.random() * (yRange.max - yRange.min) + yRange.min;
-      const z = Math.random() * (zRange.max - zRange.min) + zRange.min;
-      starPositions.push({ x, y, z });
-    }
-    return starPositions;
-  }
+  sizes = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
 
   camera = new THREE.PerspectiveCamera(
     75,
@@ -120,15 +114,26 @@ const threeJSinitialFunc = () => {
   const mountainMesh = new THREE.Mesh(mountainGeometry, mountainMaterial);
   scene.add(mountainMesh);
 
+  function generateStarPositions(numStars, xRange, yRange, zRange) {
+    const starPositions = [];
+    for (let i = 0; i < numStars; i++) {
+      const x = Math.random() * (xRange.max - xRange.min) + xRange.min;
+      const y = Math.random() * (yRange.max - yRange.min) + yRange.min;
+      const z = Math.random() * (zRange.max - zRange.min) + zRange.min;
+      starPositions.push({ x, y, z });
+    }
+    return starPositions;
+  }
+
   // Define the positions and properties of the stars in the cluster
   const starPositions = generateStarPositions(
-    3000,
+    25000,
     { min: -200, max: 200 },
-    { min: -20, max: 20 },
-    { min: -8800, max: 300 }
+    { min: -30, max: 30 },
+    { min: -10000, max: 300 }
   );
 
-  const starSize = 2;
+  const starSize = 0.7;
   const starColor = 0xffffff;
 
   // Create a mesh object for each star
@@ -140,6 +145,21 @@ const threeJSinitialFunc = () => {
     scene.add(starMesh);
   });
 
+  // 
+  window.addEventListener("resize", () => {
+    // Update sizes
+    sizes.width = window.innerWidth;
+    sizes.height = window.innerHeight;
+
+    // Update camera
+    camera.aspect = sizes.width / sizes.height;
+    camera.updateProjectionMatrix();
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  });
+
   // Set the camera position and render the scene
   camera.position.set(0, posy, posz);
   const renderer = new THREE.WebGLRenderer();
@@ -149,7 +169,7 @@ const threeJSinitialFunc = () => {
   // Controls
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enablePan = false;
-  controls.enableRotate = true;
+  // controls.enableRotate = false;
   controls.enableZoom = false;
   controls.enableDamping = true;
 
@@ -201,15 +221,17 @@ const galaxyAnimation = () => {
             onUpdate: (self: any) => {
               let pg = self.progress;
               // console.log('pg', pg);
+              let amplitude = 80;
               if (pg < 0.3) {
-                posy = (pg / 0.3) * 60;
+                posy = (pg / 0.3) * amplitude;
               } else if (pg > 0.3 && pg < 0.5) {
-                posy = 60 - ((pg-0.3) / 0.2) * 60
-              } else if(pg > 0.5 && pg < 0.75) {
-                posy = ((pg-0.5) / 0.25) * 60;
+                posy = amplitude - ((pg - 0.3) / 0.2) * amplitude;
+              } else if (pg > 0.5 && pg < 0.75) {
+                posy = ((pg - 0.5) / 0.25) * amplitude;
               } else if (pg > 0.75 && pg < 1) {
-                posy = 60 - ((pg-0.75) / 0.25) * 60
+                posy = amplitude - ((pg - 0.75) / 0.25) * amplitude;
               }
+              console.log(posy);
               posz = 300 - 1200 * (pg / 0.3);
               camera.position.set(0, posy, posz);
             },
